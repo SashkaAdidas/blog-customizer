@@ -18,6 +18,7 @@ import {
 	backgroundColors,
 	contentWidthArr,
 	ArticleStateType,
+	defaultArticleState,
 } from 'src/constants/articleProps';
 
 type ArticleParamsFormProps = {
@@ -25,30 +26,36 @@ type ArticleParamsFormProps = {
 };
 
 export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
-	const [isOpen, setIsOpen] = useState(false);
+	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
 
 	useOutsideClickClose({
-		isOpen,
+		isOpen: isSidebarOpen,
 		rootRef: containerRef,
-		onChange: setIsOpen,
+		onChange: setIsSidebarOpen,
 	});
 
 	// Состояние шрифты
 	const [fontFamily, setFontFamily] = useState<OptionType>(
-		fontFamilyOptions[0]
+		defaultArticleState.fontFamilyOption
 	);
 	// Состояние размера шрифта
-	const [fontSize, setFontSize] = useState<OptionType>(fontSizeOptions[0]);
+	const [fontSize, setFontSize] = useState<OptionType>(
+		defaultArticleState.fontSizeOption
+	);
 
 	// Состояние цвета шрифта
-	const [fontColor, setFontColor] = useState<OptionType>(fontColors[0]);
+	const [fontColor, setFontColor] = useState<OptionType>(
+		defaultArticleState.fontColor
+	);
 
 	// Сщстояние цвета фона
-	const [bgColor, setBgColor] = useState(backgroundColors[0]);
+	const [bgColor, setBgColor] = useState(defaultArticleState.backgroundColor);
 
 	// Состояние размера фона
-	const [contentWidth, setContentWidth] = useState(contentWidthArr[0]);
+	const [contentWidth, setContentWidth] = useState(
+		defaultArticleState.contentWidth
+	);
 
 	// Обработчик изменения шрифта
 	const handleFontFamilyChange = (option: OptionType) => {
@@ -73,11 +80,13 @@ export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
 
 	// Сброс к значению по умолчанию
 	const handleReset = () => {
-		setFontFamily(fontFamilyOptions[0]);
-		setFontSize(fontSizeOptions[0]);
-		setFontColor(fontColors[0]);
-		setBgColor(backgroundColors[0]);
-		setContentWidth(contentWidthArr[0]);
+		setFontFamily(defaultArticleState.fontFamilyOption);
+		setFontSize(defaultArticleState.fontSizeOption);
+		setFontColor(defaultArticleState.fontColor);
+		setBgColor(defaultArticleState.backgroundColor);
+		setContentWidth(defaultArticleState.contentWidth);
+
+		props.onApply(defaultArticleState);
 	};
 
 	// Применение стилей к странице
@@ -98,10 +107,15 @@ export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
 
 	return (
 		<>
-			<ArrowButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
+			<ArrowButton
+				isOpen={isSidebarOpen}
+				onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+			/>
 			<aside
 				ref={containerRef}
-				className={clsx(styles.container, { [styles.container_open]: isOpen })}>
+				className={clsx(styles.container, {
+					[styles.container_open]: isSidebarOpen,
+				})}>
 				<form className={styles.form} onSubmit={handleSubmit}>
 					<Text as='h2' size={31} weight={800} uppercase={true}>
 						Задайте параметры
