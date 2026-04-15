@@ -10,6 +10,7 @@ type RadioGroupProps = {
 	selected: OptionType;
 	onChange?: (value: OptionType) => void;
 	title: string;
+	renderOption?: (option: OptionType) => React.ReactNode;
 };
 
 export const RadioGroup = (props: RadioGroupProps) => {
